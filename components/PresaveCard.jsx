@@ -6,22 +6,38 @@ import Loader from "./Loader";
 
 export default function PresaveCard({ isTestMode = false }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [helperText, setHelperText] = useState("Connecting to Spotify...");
+
+  const getAuthUrl = () => {
+    const returnTo = "/presave";
+    return `/api/auth?return_to=${encodeURIComponent(returnTo)}`;
+  };
 
   const handlePresave = () => {
     setIsLoading(true);
+    setHelperText("Connecting to Spotify...");
 
     if (isTestMode) {
       window.location.href = "/success?success=true";
       return;
     }
 
-    // Attempt deep link
+    const authUrl = getAuthUrl();
+    const ua = navigator.userAgent || "";
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+
+    if (!isMobile) {
+      setHelperText("Redirecting to Spotify login...");
+      window.location.href = authUrl;
+      return;
+    }
+
+    // Best-effort app-first attempt. OAuth consent is still handled by Spotify web OAuth.
     window.location.href = "spotify://";
-    
-    // Fallback to oauth after a short delay
     setTimeout(() => {
-      window.location.href = "/api/auth";
-    }, 1500);
+      setHelperText("Redirecting to Spotify login...");
+      window.location.href = authUrl;
+    }, 1100);
   };
 
   const containerVariants = {
@@ -97,7 +113,11 @@ export default function PresaveCard({ isTestMode = false }) {
           
           <motion.div variants={itemVariants} className="w-full">
             {isLoading ? (
-              <div className="py-2 h-14 flex items-center justify-center"><Loader /></div>
+              <div className="space-y-2 py-2">
+                <div className="h-14 flex items-center justify-center"><Loader /></div>
+                <p className="text-[11px] text-gray-300 font-semibold tracking-wide">🎧 {helperText}</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">If you are not logged in, Spotify may ask you to sign in.</p>
+              </div>
             ) : (
               <motion.button
                 whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(29, 185, 84, 0.4)" }}

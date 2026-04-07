@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Spotify Presave Flow
 
-## Getting Started
+This app provides an Instagram-safe Spotify presave journey with test mode and production auth flow.
 
-First, run the development server:
+## Environment
+
+Create `.env.local` with:
+
+```bash
+SPOTIFY_CLIENT_ID=...
+SPOTIFY_CLIENT_SECRET=...
+REDIRECT_URI=http://127.0.0.1:3000/api/callback
+SPOTIFY_TRACK_ID=...
+# Optional explicit state signing secret
+# SPOTIFY_STATE_SECRET=...
+```
+
+Make sure the same callback URI is added in Spotify Developer Dashboard.
+
+## Local Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://127.0.0.1:3000`.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Note: Dev mode may show HMR websocket warnings depending on browser extensions and local setup.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load **Outfit**, a premium font from Google Fonts, for a sleek music-industry look.
+## Demo Mode (Recommended for Meetings)
 
-## Learn More
+Run a production-like local server to avoid dev HMR noise:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run demo
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This builds and starts the app with `next start`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Quality Checks
 
-## Deploy on Vercel
+```bash
+npm run lint
+npm run test
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Test Mode
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open with query params:
+
+- `/?test=true` to skip Spotify API and simulate success
+- `/?error=token_fail` to view error state rendering

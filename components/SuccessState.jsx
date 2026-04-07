@@ -5,7 +5,7 @@ import Link from "next/link";
 import ResultCard from "./ResultCard";
 
 export default function SuccessState({
-  description = "The track has been presaved to your Spotify library.",
+  description = "✅ Song successfully presaved",
   actionHref = "/",
   actionLabel = "Back to Start",
 }) {

@@ -3,9 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useSyncExternalStore, useRef, useMemo, useState, useEffect } from "react";
+import { useSyncExternalStore, useRef, useMemo } from "react";
 import { detectEnvironment } from "@/utils/detectBrowser";
-import DebugPanel from "./DebugPanel";
 import ErrorState from "./ErrorState";
 import ResultCard from "./ResultCard";
 import SuccessState from "./SuccessState";
@@ -54,11 +53,6 @@ function getClientSnapshot() {
 }
 
 export default function SuccessView({ searchParams }) {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const serverSnapshotRef = useRef(null);
   
   const initialEnv = useMemo(() => getInitialEnvironment(searchParams), [searchParams]);
@@ -112,8 +106,6 @@ export default function SuccessView({ searchParams }) {
           )}
         </motion.div>
       </AnimatePresence>
-
-      {isMounted && <DebugPanel environment={environment} />}
     </div>
   );
 }
