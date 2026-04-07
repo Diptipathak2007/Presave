@@ -9,9 +9,7 @@ function getPublicOrigin(request) {
   if (configuredRedirectUri) {
     try {
       return new URL(configuredRedirectUri).origin;
-    } catch {
-      // Fall through to forwarded/request URL origin.
-    }
+    } catch {}
   }
 
   const forwardedHost = request.headers.get("x-forwarded-host");
