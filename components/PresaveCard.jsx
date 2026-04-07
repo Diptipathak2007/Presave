@@ -32,7 +32,6 @@ export default function PresaveCard({ isTestMode = false }) {
       return;
     }
 
-    // Best-effort app-first attempt. OAuth consent is still handled by Spotify web OAuth.
     window.location.href = "spotify://";
     setTimeout(() => {
       setHelperText("Redirecting to Spotify login...");
@@ -72,7 +71,6 @@ export default function PresaveCard({ isTestMode = false }) {
       className="glass-card w-full max-w-sm mx-auto rounded-[2.5rem] overflow-hidden shadow-premium p-1"
     >
       <div className="bg-spotify-dark/40 rounded-[2.2rem] overflow-hidden pb-8 backdrop-blur-md">
-        {/* Cover Art Area */}
         <motion.div 
           variants={itemVariants}
           animate={{ 

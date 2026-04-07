@@ -63,7 +63,6 @@ function subscribeToLocationChanges(callback) {
   return () => window.removeEventListener("popstate", callback);
 }
 
-// Stable cached snapshot — prevents useSyncExternalStore infinite loop
 let cachedEnvironment = null;
 function getClientSnapshot() {
   const next = detectEnvironment();
@@ -133,7 +132,6 @@ function getErrorContent(errorCode) {
 export default function LandingFlow({ searchParams }) {
   const serverSnapshotRef = useRef(null);
   
-  // Use useMemo for stable initialization
   const initialEnv = useMemo(() => getInitialEnvironment(searchParams), [searchParams]);
   if (serverSnapshotRef.current === null) {
     serverSnapshotRef.current = initialEnv;
@@ -184,7 +182,6 @@ export default function LandingFlow({ searchParams }) {
 
   return (
     <main className="relative z-0 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-spotify-dark p-6">
-      {/* Dynamic Background Blobs */}
       <>
         <div className="absolute top-0 -left-4 w-72 h-72 bg-spotify-green rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
         <div className="absolute top-0 -right-4 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />

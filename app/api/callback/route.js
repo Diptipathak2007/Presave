@@ -6,9 +6,7 @@ function getPublicOrigin(request) {
   if (cookieOrigin) {
     try {
       return new URL(cookieOrigin).origin;
-    } catch {
-      // Fall through to other origin strategies.
-    }
+    } catch {}
   }
 
   const requestUrl = new URL(request.url);
@@ -17,9 +15,7 @@ function getPublicOrigin(request) {
   if (configuredRedirectUri) {
     try {
       return new URL(configuredRedirectUri).origin;
-    } catch {
-      // Fall through to forwarded/request URL origin.
-    }
+    } catch {}
   }
 
   const forwardedHost = request.headers.get("x-forwarded-host");
@@ -113,14 +109,12 @@ export async function GET(request) {
     return buildErrorRedirect(request, "config", publicOrigin, returnPath);
   }
 
-  // Track to save
-  const trackId = process.env.SPOTIFY_TRACK_ID || "4PTG3Z6ehGkBFwjybzWkR8"; // Rick Astley - Never Gonna Give You Up
+  const trackId = process.env.SPOTIFY_TRACK_ID || "4PTG3Z6ehGkBFwjybzWkR8";
 
   const tokenController = new AbortController();
   const tokenTimeout = setTimeout(() => tokenController.abort(), 10000);
 
   try {
-    // 1. Exchange code for access token
     const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
     const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
@@ -143,7 +137,6 @@ export async function GET(request) {
 
     const { access_token } = await tokenResponse.json();
 
-    // 2. Save track to user's library
     const saveResponse = await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
       method: "PUT",
       headers: {
@@ -159,7 +152,6 @@ export async function GET(request) {
       throw new Error(saveErrorCode);
     }
 
-    // 3. Redirect to success page
     const response = NextResponse.redirect(buildReturnUrl(publicOrigin, returnPath, "status", "success"));
     response.cookies.set("spotify_auth_state", "", {
       maxAge: 0,
